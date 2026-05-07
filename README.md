@@ -1,4 +1,3 @@
-````markdown name=README.md
 *This project has been created as part of the 42 curriculum by <login1>[, <login2>[, <login3>[...]]].*
 
 # <Project Name>
@@ -89,5 +88,3 @@
 - Not used for / verification approach:
   - <what you verified manually>
   - <how you tested>
-````
-
