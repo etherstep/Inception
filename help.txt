@@ -1,0 +1,9 @@
+docker exec -it wordpress_mariadb mariadb -u root -p<pass>
+
+//remove all containers
+docker rm $(docker ps -aq)
+
+add bind to
+/etc/hosts
+
+

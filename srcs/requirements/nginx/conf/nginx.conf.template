@@ -1,0 +1,64 @@
+# Run nginx worker processes as a non-root user for least privilege.
+user www-data;
+
+# Tune how many simultaneous connections each worker can handle.
+events {
+    worker_connections 1024;
+}
+
+http {
+    # Load MIME type mappings so static files get correct Content-Type headers.
+    include /etc/nginx/mime.types;
+
+    server {
+        # Listen on plain HTTP only to redirect everything to HTTPS.
+        listen ${NGINX_HTTP_PORT};
+        listen [::]:${NGINX_HTTP_PORT};
+
+        # Use the domain from .env (rendered by envsubst at container start).
+        server_name ${DOMAIN_NAME};
+
+        # Permanent redirect to HTTPS while preserving host + requested URI.
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        # Main HTTPS virtual host (only public entrypoint should be 443 on the host).
+        listen ${NGINX_HTTPS_PORT} ssl;
+        listen [::]:${NGINX_HTTPS_PORT} ssl;
+
+        # Use the domain from .env (rendered by envsubst at container start).
+        server_name ${DOMAIN_NAME};
+
+        # Restrict TLS to v1.2/v1.3 per subject requirements.
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        # Use the self-signed cert generated at runtime by the entrypoint script.
+        ssl_certificate /etc/nginx/ssl/certificate.crt;
+        ssl_certificate_key /etc/nginx/ssl/private.key;
+
+        # Serve the WordPress volume and prefer index.php when present.
+        root /var/www/html;
+        index index.php index.html;
+
+        # WordPress front controller: route non-existent paths through index.php.
+        location / {
+            try_files $uri $uri/ /index.php?$args;
+        }
+
+        # Forward PHP requests to the php-fpm container over the internal Docker network.
+        location ~ \.php$ {
+            try_files $uri =404;
+            include fastcgi.conf;
+
+            # Target the wordpress service name and php-fpm listen port from .env.
+            fastcgi_pass wordpress:${PHP_FPM_PORT};
+
+            # Provide timeouts suitable for WordPress/PHP initialization and heavier requests.
+            fastcgi_index index.php;
+            fastcgi_connect_timeout 60s;
+            fastcgi_send_timeout 60s;
+            fastcgi_read_timeout 60s;
+        }
+    }
+}

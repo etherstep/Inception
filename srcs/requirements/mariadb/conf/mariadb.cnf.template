@@ -1,0 +1,6 @@
+[mysqld]
+skip-networking=0
+bind-address=${MARIADB_BIND_ADDRESS}
+port=${MARIADB_PORT}
+socket = /run/mysqld/mysqld.sock
+datadir = /var/lib/mysql
