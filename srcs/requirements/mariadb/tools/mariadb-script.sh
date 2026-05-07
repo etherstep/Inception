@@ -29,7 +29,6 @@ read_secret() {
   [ -f "$path" ] && tr -d '\r\n' < "$path"
 }
 
-# Refuse to start if secrets weren't provided.
 MYSQL_DATABASE="$(read_secret db_name)"
 MYSQL_USER="$(read_secret db_user)"
 MYSQL_PASSWORD="$(read_secret db_password)"
@@ -37,6 +36,7 @@ MYSQL_ROOT_PASSWORD="$(read_secret db_root_password)"
 
 export MYSQL_DATABASE MYSQL_USER MYSQL_PASSWORD MYSQL_ROOT_PASSWORD
 
+# Refuse to start if secrets weren't provided.
 : "${MYSQL_DATABASE:?missing db_name secret}"
 : "${MYSQL_USER:?missing db_user secret}"
 : "${MYSQL_PASSWORD:?missing db_password secret}"
