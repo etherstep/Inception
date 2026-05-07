@@ -7,3 +7,6 @@ add bind to
 /etc/hosts
 
 
+sudo mkdir -p /home/jpelline/data/mariadb
+sudo mkdir -p /home/jpelline/data/wordpress
+sudo chown -R jpelline:jpelline /home/jpelline/data
