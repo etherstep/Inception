@@ -1,7 +1,14 @@
-*This project has been created as part of the 42 curriculum by **jpelline**.*
+> [!NOTE]
+> *This project has been created as part of the 42 curriculum by **jpelline**.*
 
 # Inception
-A Docker-based infrastructure project deploying a secure WordPress stack (NGINX + PHP-FPM + MariaDB) with persistent data and secrets management.
+A Docker-based infrastructure project deploying a secure WordPress stack — **NGINX (TLS)** → **WordPress (PHP-FPM)** → **MariaDB** — with **persistent storage** and **Docker secrets**.
+
+> **TL;DR**
+> - `make up` → build + start everything  
+> - `make down` → stop stack (keep data)  
+> - `make clean` → remove containers + images (keep data)  
+> - `make fclean` → wipe data (fresh start)
 
 ---
 
@@ -11,12 +18,12 @@ A Docker-based infrastructure project deploying a secure WordPress stack (NGINX 
 - <one or two sentences>
 
 ### Overview
-- **NGINX**: (TLS termination, reverse proxy)
-- **WordPress (PHP-FPM)**: <role> (application runtime)
-- **MariaDB**: (database)
-- **Networking**: <how services communicate / exposed ports>
-- **Persistence**: <what is stored in volumes / bind mounts>
-- **Entrypoint**: <how to start the stack (Makefile / docker compose)>
+- **NGINX** — TLS termination + reverse proxy (serves static assets, forwards PHP to PHP-FPM)
+- **WordPress (PHP-FPM)** — PHP runtime running WordPress (no Apache)
+- **MariaDB** — database backend for WordPress data
+- **Networking** — services communicate over a dedicated Docker **bridge** network (`inception`)
+- **Persistence** — WordPress files + MariaDB data are stored on the host (`/home/<user>/data/...`)
+- **Entrypoint** — `Makefile` wraps `docker compose` commands (`make up`, `make down`, etc.)
 
 ### Docker & Sources
 - <why Docker is used here>
