@@ -3,8 +3,8 @@
 all: up
 
 up:
-	@mkdir -p /home/inception/data/wordpress
-	@mkdir -p /home/inception/data/mariadb
+	@mkdir -p /home/$(USER)/data/wordpress
+	@mkdir -p /home/$(USER)/data/mariadb
 	@cd srcs && docker-compose up -d --build
 
 down:
@@ -20,7 +20,7 @@ clean:
 	@cd srcs && docker-compose down --rmi all --remove-orphans
 
 fclean: clean
-	@sudo rm -rf /home/inception/data
+	@sudo rm -rf /home/$(USER)/data
 
 re: fclean all
 

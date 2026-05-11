@@ -1,40 +1,55 @@
 *This project has been created as part of the 42 curriculum by **jpelline**.*
 
 # Inception
+A Docker-based infrastructure project deploying a secure WordPress stack (NGINX + PHP-FPM + MariaDB) with persistent data and secrets management.
+
+---
 
 ## Description
+
 ### Goal
 - <one or two sentences>
 
 ### Overview
-- <what services/components exist>
-- <how they connect at a high level>
-- <what the entrypoint is>
+- **NGINX**: (TLS termination, reverse proxy)
+- **WordPress (PHP-FPM)**: <role> (application runtime)
+- **MariaDB**: (database)
+- **Networking**: <how services communicate / exposed ports>
+- **Persistence**: <what is stored in volumes / bind mounts>
+- **Entrypoint**: <how to start the stack (Makefile / docker compose)>
 
 ### Docker & Sources
 - <why Docker is used here>
-- <base images used (e.g., Alpine/Debian) and why>
-- <what is built from Dockerfiles vs what is downloaded at build/runtime>
+- **Base images**: <Alpine/Debian + why>
+- **Build-time vs runtime downloads**
+  - Built from Dockerfiles: <...>
+  - Downloaded at build/runtime: <...>
 
 ### Main Design Choices
 - <design choice 1>
 - <design choice 2>
 - <design choice 3>
 
-### Comparisons
-#### Virtual Machines vs Docker
+---
+
+## Architecture & Trade-offs
+
+### Virtual Machines vs Docker
 - <bullet points>
 
-#### Secrets vs Environment Variables
+### Secrets vs Environment Variables
 - <bullet points>
 
-#### Docker Network vs Host Network
+### Docker Network vs Host Network
 - <bullet points>
 
-#### Docker Volumes vs Bind Mounts
+### Docker Volumes vs Bind Mounts
 - <bullet points>
+
+---
 
 ## Instructions
+
 ### Requirements
 - <OS/VM requirement>
 - <Docker version>
@@ -47,33 +62,53 @@
 3. <step>
 
 ### Configuration
-- `.env`
-  - <list required variables>
-- `secrets/`
-  - <list required secret files>
-- Hosts / DNS
-  - <domain -> IP mapping instructions>
+
+#### `.env`
+- Required variables:
+  - <VAR_1=...>
+  - <VAR_2=...>
+
+#### `secrets/`
+- Required files:
+  - <secret_file_1>
+  - <secret_file_2>
+
+#### Hosts / DNS
+- <domain -> IP mapping instructions>
+
+---
+
+## Usage
 
 ### Build
 ```sh
-<command(s)>
+make
 ```
 
 ### Run
 ```sh
-<command(s)>
+make up
 ```
 
-### Stop / Cleanup
+### Stop
 ```sh
-<command(s)>
+make down
 ```
 
-### Troubleshooting
-- <common issue 1> → <fix>
-- <common issue 2> → <fix>
+### Remove containers & images
+```sh
+make clean
+```
+
+### Wipe data
+```sh
+make fclean
+```
+
+---
 
 ## Resources
+
 ### References
 - <link + short label>
 - <link + short label>

@@ -1,4 +1,5 @@
 FROM alpine:3.23.2
+# 3.22.4
 
 # Install php-fpm + extensions needed by WordPress, 
 # plus mariadb-client for DB readiness checks and WP-CLI DB access.

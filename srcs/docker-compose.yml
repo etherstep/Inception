@@ -78,13 +78,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/jpelline/data/wordpress
+      device: /home/${LOGIN}/data/wordpress
   mariadb:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/jpelline/data/mariadb
+      device: /home/${LOGIN}/data/mariadb
 
 networks:
   inception: 

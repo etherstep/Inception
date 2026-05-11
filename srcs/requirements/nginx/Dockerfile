@@ -1,4 +1,5 @@
 FROM alpine:3.23.2
+# 3.22.4
 
 RUN apk add --no-cache nginx openssl gettext
 
