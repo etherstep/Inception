@@ -43,9 +43,11 @@ COPY ./tools/wordpress-script.sh /usr/local/bin/wordpress-script.sh
 RUN chmod +x /usr/local/bin/wordpress-script.sh
 
 # Ensure www-data user/group exists 
-# and matches the user nginx/php-fpm run as.
 RUN getent group www-data >/dev/null || addgroup -S www-data && \
-    getent passwd www-data >/dev/null || adduser -S -D -H -s /sbin/nologin -G www-data www-data
+    getent passwd www-data >/dev/null || adduser -S -D -H -s /sbin/nologin \
+    -G www-data www-data && \
+    mkdir -p /home/www-data && \
+    chown -R www-data:www-data /home/www-data
 
 # Pre-set ownership so the runtime volume 
 # can be used without permission issues.

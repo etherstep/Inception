@@ -1,11 +1,14 @@
-.PHONY: all up down stop start clean fclean re status logs
+.PHONY: all build up down stop start clean fclean re status logs
 
-all: up
+all: build
+
+build:
+	@cd srcs && docker-compose build
 
 up:
 	@mkdir -p /home/$(USER)/data/wordpress
 	@mkdir -p /home/$(USER)/data/mariadb
-	@cd srcs && docker-compose up -d --build
+	@cd srcs && docker-compose up -d
 
 down:
 	@cd srcs && docker-compose down --remove-orphans
@@ -16,8 +19,6 @@ stop:
 start:
 	@cd srcs && docker-compose start
 
-
-
 clean:
 	@cd srcs && docker-compose down --rmi all --remove-orphans
 
@@ -26,7 +27,9 @@ fclean: clean
 
 re: fclean all
 
-SERVICES := $(filter-out $@,$(MAKECMDGOALS))
+KNOWN_TARGETS := all up down stop start clean fclean re status logs
+
+SERVICES := $(filter-out $(KNOWN_TARGETS),$(MAKECMDGOALS))
 
 status:
 	@cd srcs && docker-compose ps $(SERVICES)
@@ -34,5 +37,6 @@ status:
 logs:
 	@cd srcs && docker-compose logs -f --tail=200 $(SERVICES)
 
+# No-op so extra words don't become "missing targets"
 %:
-	@:s && docker-compose logs -f --tail=200 $(SERVICE)
+	@:
