@@ -1,132 +1,84 @@
 > [!NOTE]
-> *This project has been created as part of the 42 curriculum by **jpelline**.*
+> This project has been created as part of the 42 curriculum by **jpelline**.
 
 # Inception
-A Docker-based infrastructure project deploying a secure WordPress stack — **NGINX (TLS)** → **WordPress (PHP-FPM)** → **MariaDB** — with **persistent storage** and **Docker secrets**.
-
-> **TL;DR**
-> - `make up` → build + start everything  
-> - `make down` → stop stack (keep data)  
-> - `make clean` → remove containers + images (keep data)  
-> - `make fclean` → wipe data (fresh start)
-
----
+A Docker-based infrastructure project deploying a secure WordPress stack.
 
 ## Description
 
 ### Goal
-- <one or two sentences>
+- Design and run a small, secure, reproducible infrastructure using **Docker**.
 
 ### Overview
-- **NGINX** — TLS termination + reverse proxy (serves static assets, forwards PHP to PHP-FPM)
-- **WordPress (PHP-FPM)** — PHP runtime running WordPress (no Apache)
+- **NGINX** — TLS termination + reverse proxy
+- **WordPress** — PHP runtime
 - **MariaDB** — database backend for WordPress data
-- **Networking** — services communicate over a dedicated Docker **bridge** network (`inception`)
-- **Persistence** — WordPress files + MariaDB data are stored on the host (`/home/<user>/data/...`)
-- **Entrypoint** — `Makefile` wraps `docker compose` commands (`make up`, `make down`, etc.)
 
-### Docker & Sources
-- <why Docker is used here>
-- **Base images**: <Alpine/Debian + why>
-- **Build-time vs runtime downloads**
-  - Built from Dockerfiles: <...>
-  - Downloaded at build/runtime: <...>
-
-### Main Design Choices
-- <design choice 1>
-- <design choice 2>
-- <design choice 3>
-
----
-
-## Architecture & Trade-offs
+## Architecture
 
 ### Virtual Machines vs Docker
-- <bullet points>
+- **Virtual machines** run a full guest OS (their own kernel) on top of a hypervisor, which adds more overhead in CPU/RAM/disk and usually boots slower.
+- **Docker containers** are isolated processes that share the host kernel, so they start faster and use fewer resources while still providing separation (filesystem, network, users, etc.).
+- Containers encourage a “one service per container” architecture (NGINX, PHP-FPM, MariaDB), which makes the stack easier to manage and reproduce.
 
 ### Secrets vs Environment Variables
-- <bullet points>
+- <fill in>
 
 ### Docker Network vs Host Network
-- <bullet points>
+- <fill in>
 
 ### Docker Volumes vs Bind Mounts
-- <bullet points>
-
----
+- <fill in>
 
 ## Instructions
 
 ### Requirements
 - <OS/VM requirement>
-- <Docker version>
-- <Docker Compose version>
-- <other prerequisites>
 
 ### Setup
-1. <step>
-2. <step>
-3. <step>
+- <fill in>
 
 ### Configuration
 
 #### `.env`
 - Required variables:
-  - <VAR_1=...>
-  - <VAR_2=...>
+  - `<VAR_1=...>`
+  - `<VAR_2=...>`
 
 #### `secrets/`
 - Required files:
-  - <secret_file_1>
-  - <secret_file_2>
+  - `<secret_file_1>`
+  - `<secret_file_2>`
 
 #### Hosts / DNS
 - <domain -> IP mapping instructions>
 
----
-
 ## Usage
 
-### Build
+### Build / Run
 ```sh
+git clone https://github.com/etherstep/inception.git
+cd inception
 make
 ```
 
-### Run
+### Commands
 ```sh
-make up
+make up      # build + run services
+make down    # stop services
+make clean   # remove containers and images
+make fclean  # wipe all data
+make status [service...]
+make logs   [service...]
 ```
-
-### Stop
-```sh
-make down
-```
-
-### Remove containers & images
-```sh
-make clean
-```
-
-### Wipe data
-```sh
-make fclean
-```
-
----
 
 ## Resources
 
 ### References
-- <link + short label>
-- <link + short label>
-- <link + short label>
+- https://docs.docker.com/guides/
+- https://mariadb.com/docs/
+- https://nginx.org/en/docs/
+- https://www.youtube.com/watch?v=DQdB7wFEygo
 
 ### AI Usage
-- Tools used: <tool/model name(s)>
-- Used for:
-  - <task 1>
-  - <task 2>
-  - <task 3>
-- Not used for / verification approach:
-  - <what you verified manually>
-  - <how you tested>
+- AI was mostly used to assist in understanding concepts, writing complex scripts, and debugging.
