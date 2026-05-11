@@ -27,10 +27,9 @@ http {
         listen ${NGINX_HTTPS_PORT} ssl;
         listen [::]:${NGINX_HTTPS_PORT} ssl;
 
-        # Use the domain from .env (rendered by envsubst at container start).
         server_name ${DOMAIN_NAME};
 
-        # Restrict TLS to v1.2/v1.3 per subject requirements.
+        # Restrict TLS to v1.2/v1.3.
         ssl_protocols TLSv1.2 TLSv1.3;
 
         # Use the self-signed cert generated at runtime by the entrypoint script.

@@ -1,4 +1,4 @@
-.PHONY: all up down stop start clean fclean re
+.PHONY: all up down stop start clean fclean re status logs
 
 all: up
 
@@ -16,6 +16,8 @@ stop:
 start:
 	@cd srcs && docker-compose start
 
+
+
 clean:
 	@cd srcs && docker-compose down --rmi all --remove-orphans
 
@@ -24,3 +26,13 @@ fclean: clean
 
 re: fclean all
 
+SERVICES := $(filter-out $@,$(MAKECMDGOALS))
+
+status:
+	@cd srcs && docker-compose ps $(SERVICES)
+
+logs:
+	@cd srcs && docker-compose logs -f --tail=200 $(SERVICES)
+
+%:
+	@:s && docker-compose logs -f --tail=200 $(SERVICE)

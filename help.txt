@@ -6,7 +6,7 @@ docker rm $(docker ps -aq)
 add bind to
 /etc/hosts
 
-
-sudo mkdir -p /home/jpelline/data/mariadb
-sudo mkdir -p /home/jpelline/data/wordpress
 sudo chown -R jpelline:jpelline /home/jpelline/data
+
+verify nginx mime types
+curl -I https://jpelline.42.fr/wp-includes/css/dist/block-library/style.min.css | rg -i "content-type"
