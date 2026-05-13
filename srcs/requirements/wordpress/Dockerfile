@@ -15,8 +15,8 @@ RUN apk add --no-cache mariadb-client \
 	curl \
 	gettext \
 	bash && \
-	ln -s /usr/bin/php83 /usr/bin/php && \
-	ln -s /usr/sbin/php-fpm83 /usr/sbin/php-fpm
+	ln -sf /usr/bin/php83 /usr/bin/php && \
+	ln -sf /usr/sbin/php-fpm83 /usr/sbin/php-fpm
 
 # Install CA certs so HTTPS downloads (WP-CLI) verify correctly.
 RUN apk add --no-cache curl ca-certificates && update-ca-certificates

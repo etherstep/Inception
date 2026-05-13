@@ -69,6 +69,7 @@ services:
       wordpress:
         condition: service_healthy
     ports:
+      - "${NGINX_HTTP_PORT}:${NGINX_HTTP_PORT}"
       - "${NGINX_HTTPS_PORT}:${NGINX_HTTPS_PORT}"
     restart: always
 
