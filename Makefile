@@ -20,7 +20,7 @@ start:
 	@cd srcs && docker-compose start
 
 clean:
-	@cd srcs && docker-compose down --rmi all --remove-orphans
+	@cd srcs && docker-compose down -v --rmi all --remove-orphans
 
 fclean: clean
 	@sudo rm -rf /home/$(USER)/data
