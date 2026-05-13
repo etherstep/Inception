@@ -17,7 +17,7 @@ services:
       - inception
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping --protocol=tcp --host=127.0.0.1 --port=$MARIADB_PORT"]
+      test: ["CMD-SHELL", "mariadb-admin ping --protocol=tcp --host=127.0.0.1 --port=$MARIADB_PORT -u $(cat ../secrets/db_user) -p$(cat ../secrets/db_password)"]
       interval: 10s
       timeout: 5s
       retries: 10
