@@ -100,6 +100,32 @@ https://jpelline.42.fr/wp-admin
   - <never commit secrets>
   - <how to rotate/update>
 
+ ### Configuration
+
+#### `.env`
+- Required variables:
+  - `DOMAIN_NAME=`
+  - `NGINX_HTTP_PORT=80`
+  - `NGINX_HTTPS_PORT=443`
+  - `PHP_FPM_PORT=9000`
+  - `MARIADB_PORT=3306`
+  - `MARIADB_BIND_ADDRESS=0.0.0.0`
+  - `WORDPRESS_TITLE=`
+  - `LOGIN=${USER}`
+
+#### `secrets/`
+- Required files:
+  - `db_name.txt`
+  - `db_password.txt`
+  - `db_root_password.txt`
+  - `db_user.txt`
+  - `wp_admin.txt`
+  - `wp_admin_email.txt`
+  - `wp_admin_password.txt`
+  - `wp_user.txt`
+  - `wp_user_email.txt`
+  - `wp_user_password.txt`
+
 ## 5. Check everything is running correctly
 ### Container status
 ```sh
