@@ -1,110 +1,57 @@
-
 # Very user-friendly documentation
 
-◦ Understand what services are provided by the stack.
-mariadb
-nginx
-wordpress
-
-◦ Start and stop the project.
-this project uses Makefile
-commands:
-make up
-    create and start containers
-make down
-    stop and remove containers, networks
-make stop
-    stop services
-make start
-    start services
-make clean
-    same as make down
-make fclean
-    removes everything
-make re
-    executes fclean and make all
-
-◦ Access the website and the administration panel.
-https://jpelline.42.fr
-https://jpelline.42.fr/wp-admin
-
-◦ Locate and manage credentials.
-◦ Check that the services are running correctly.
-
-# User Documentation
-
 ## 1. What this project provides
-### Services in the stack
-- **NGINX (TLS reverse proxy)**
-  - Purpose: <...>
-  - Exposed ports: <...>
-- **WordPress (php-fpm)**
-  - Purpose: <...>
-  - Exposed ports: <...> (internal only)
-- **MariaDB**
-  - Purpose: <...>
-  - Exposed ports: <...> (internal only)
 
-### How services connect (high level)
-- <NGINX -> php-fpm>
-- <WordPress -> MariaDB>
-- <Docker network name>
+### Services in the stack
+
+- **NGINX (TLS reverse proxy)**
+  - Web server serving WordPress via HTTPS
+  - Exposed ports: 443, 80
+    
+- **WordPress (php-fpm)**
+  - Purpose: WordPress application backend (PHP execution layer)
+  - Exposed ports: 9000 (internal only)
+    
+- **MariaDB**
+  - Purpose: database for wordpress data
+  - Exposed ports: 3306 (internal only)
+
+### How services connect
+- NGINX → PHP-FPM (WordPress processing)
+- WordPress → MariaDB (database queries)
+- Docker network: internal bridge network (`inception` or project network name)
 
 ## 2. Start / Stop
-### Start
 ```sh
-<make command to start>
-```
-
-### Stop
-```sh
-<make command to stop>
-```
-
-### Full reset (removes data)
-```sh
-<make clean/fclean command>
+make up      # build + run services
+make down    # stop services
+make clean   # remove containers and images
+make fclean  # wipe all data
 ```
 
 ## 3. Access
 ### Website
-- URL: `https://<domain>/`
+- URL: `https://jpelline.42.fr`
 - Notes:
-  - <self-signed cert warning>
-  - <expected landing page>
+  - Self-signed certificate warning is expected (ignore in browser)
 
 ### WordPress administration panel
-- URL: `https://<domain>/wp-admin`
+- URL: `https://jpelline.42.fr/wp-admin`
 - Login:
-  - Username: <where to find it>
-  - Password: <where to find it>
+  - Username: from /secrets/wp_admin.txt
+  - Password: from /secrets/wp_admin_password.txt
 
 ## 4. Credentials (where to find / how to manage)
 ### Non-secret configuration
 - File: `.env`
 - What it controls:
-  - <DOMAIN_NAME, ports, etc.>
-
-### Secrets
-- Location: `<path to secrets dir>`
-- Files:
-  - `<db_name file>`
-  - `<db_user file>`
-  - `<db_password file>`
-  - `<db_root_password file>`
-  - `<wp_admin file>`
-  - `<wp_admin_password file>`
-  - `<wp_user file>`
-  - `<wp_user_password file>`
-- Rules:
-  - <never commit secrets>
-  - <how to rotate/update>
+  - Domain name, ports, and general service configuration
 
  ### Configuration
 
 #### `.env`
 - Required variables:
-  - `DOMAIN_NAME=`
+  - `DOMAIN_NAME=jpelline.42.fr`
   - `NGINX_HTTP_PORT=80`
   - `NGINX_HTTPS_PORT=443`
   - `PHP_FPM_PORT=9000`
@@ -129,24 +76,51 @@ https://jpelline.42.fr/wp-admin
 ## 5. Check everything is running correctly
 ### Container status
 ```sh
-<docker compose ps command>
+docker compose ps
+make status [service...]
 ```
 
 ### Healthchecks
-- What “healthy” means for:
-  - MariaDB: <...>
-  - WordPress: <...>
-  - NGINX: <...>
+  - MariaDB: database is ready to accept connections
+  - WordPress (PHP-FPM): responds to PHP execution requests via NGINX
+  - NGINX: responds on HTTPS (443) and serves WordPress page
 
 ### Logs
 ```sh
-<docker compose logs command>
+docker compose logs
+make logs [service...]
 ```
 
 ### Basic functional checks
 - HTTPS:
-  - <curl command>
+  - ```sh curl -k https://jpelline.42.fr```
 - WordPress:
-  - <check wp-login/wp-admin>
+  - Visit /wp-admin and verify login works
 - Database:
-  - <optional check>
+  - `docker exec` into MariaDB container and check tables exist (`mysql -u ...`)
+ 
+```sh
+# Enter the MariaDB container shell
+docker exec -it mariadb bash
+
+# Connect to MariaDB using the application database user
+mysql -u <db_user> -p
+
+# List all databases on the server
+SHOW DATABASES;
+
+# Switch to the WordPress database
+USE wordpress;
+
+# List all tables inside the WordPress database
+SHOW TABLES;
+
+# Show privileges assigned to the database user
+SHOW GRANTS FOR '<db_user>'@'%';
+
+# Run a one-liner to list databases without entering the shell
+docker exec mariadb mysql -u root -p -e "SHOW DATABASES;"
+
+# Check if MariaDB is listening on port 3306
+ss -tulnp | grep 3306
+```
