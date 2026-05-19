@@ -101,7 +101,7 @@ make logs [service...]
  
 ```sh
 # Enter the MariaDB container shell
-docker exec -it mariadb bash
+docker exec -it srcs-mariadb-1 sh
 
 # Connect to MariaDB using the application database user
 mysql -u <db_user> -p
@@ -110,7 +110,7 @@ mysql -u <db_user> -p
 SHOW DATABASES;
 
 # Switch to the WordPress database
-USE wordpress;
+USE wordpress_db;
 
 # List all tables inside the WordPress database
 SHOW TABLES;
