@@ -36,25 +36,6 @@ A Docker-based infrastructure project deploying a secure WordPress stack.
 
 ## Instructions
 
-### Build
-```sh
-git clone https://github.com/etherstep/inception.git
-cd inception
-make
-```
-
-### Usage
-```sh
-make up      # build + run services
-make down    # stop services
-make clean   # remove containers and images
-make fclean  # wipe all data
-make status  [service...]
-make logs    [service...]
-```
-
-## Requirements
-
 Make sure the following tools are installed:
 - Docker
 - Docker Compose
@@ -72,6 +53,23 @@ Add a local DNS override to `/etc/hosts`:
 
 ```sh
 127.0.0.1 jpelline.42.fr
+```
+
+### Build
+```sh
+git clone https://github.com/etherstep/inception.git
+cd inception
+make
+```
+
+### Usage
+```sh
+make up      # build + run services
+make down    # stop services
+make clean   # remove containers and images
+make fclean  # wipe all data
+make status  [service...]
+make logs    [service...]
 ```
 
 ## Resources
