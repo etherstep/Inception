@@ -1,101 +1,87 @@
 # Developer Documentation
 
 ## 1. Prerequisites
-- OS/VM: <...>
-- Docker: <version>
-- Docker Compose: <version>
-- Make: <version>
-- OpenSSL: <version> (if needed on host)
-- Notes:
-  - <any 42 VM constraints>
+- Docker
+- Docker Compose
+- Make
 
-## 2. Repository structure
-- `srcs/`
-  - `docker-compose.yml` — <...>
-  - `.env` — <...>
-  - `Makefile` — <...>
-  - `requirements/`
-    - `nginx/` — <Dockerfile/conf/tools>
-    - `wordpress/` — <Dockerfile/conf/tools>
-    - `mariadb/` — <Dockerfile/conf/tools>
-- `secrets/` — <what it contains + permissions>
-
-## 3. Configuration from scratch
+## 2. Configuration from scratch
 ### .env
 - Create/edit:
-  - `DOMAIN_NAME=...`
-  - `NGINX_HTTPS_PORT=...`
-  - `PHP_FPM_PORT=...`
-  - `MARIADB_PORT=...`
-  - `MARIADB_BIND_ADDRESS=...`
+  - `DOMAIN_NAME=jpelline.42.fr`
+  - `NGINX_HTTP_PORT=80`
+  - `NGINX_HTTPS_PORT=443`
+  - `PHP_FPM_PORT=9000`
+  - `MARIADB_PORT=3306`
+  - `MARIADB_BIND_ADDRESS=0.0.0.0`
   - `WORDPRESS_TITLE=...`
-- Notes:
-  - <rules about not storing passwords here>
+  - `LOGIN=${USER}`
 
 ### Secrets
-- Create files in: `<path>`
+- Create files in: `./secrets`
 - Required secret files:
-  - `<list>`
-- Permissions:
-  - <chmod recommendations>
+  - `db_name.txt`
+  - `db_password.txt`
+  - `db_root_password.txt`
+  - `db_user.txt`
+  - `wp_admin.txt`
+  - `wp_admin_email.txt`
+  - `wp_admin_password.txt`
+  - `wp_user.txt`
+  - `wp_user_email.txt`
+  - `wp_user_password.txt`
 
 ### Host directories for persistent data (bind mounts)
-- Create:
+- Create manually or let makefile handle it:
 ```sh
-<mkdir -p /home/<login>/data/...>
-```
-- Ownership:
-```sh
-<chown command>
+mkdir -p /home/$USER/data/mariadb
+mkdir -p /home/$USER/data/wordpress
 ```
 
 ### Domain / hosts entry
 - Add mapping:
-  - `<VM_IP> <login>.42.fr`
+  - `127.0.0.1 jpelline.42.fr`
 - Verify:
 ```sh
-<ping/curl command>
+ping jpelline.42.fr
+curl -k https://jpelline.42.fr
 ```
 
-## 4. Build and launch (Makefile + Compose)
-### Build images
+## 4. Build and launch
 ```sh
-<make build command>
-```
-
-### Launch
-```sh
-<make up command>
-```
-
-### Stop
-```sh
-<make down command>
-```
-
-### Clean / full reset
-```sh
-<make clean/fclean command>
+make up      # build + run services
+make down    # stop services
+make clean   # remove containers and images
+make fclean  # wipe all data
 ```
 
 ## 5. Useful operational commands
-### Inspect status
 ```sh
-docker compose -f srcs/docker-compose.yml ps
-```
+# Enter the MariaDB container shell
+docker exec -it srcs-mariadb-1 sh
 
-### Follow logs
-```sh
-docker compose -f srcs/docker-compose.yml logs -f --tail=100
-```
+# Connect to MariaDB using the application database user
+mysql -u <db_user> -p
 
-### Exec into containers
-```sh
-docker compose -f srcs/docker-compose.yml exec <service> sh
-```
+# List all databases on the server
+SHOW DATABASES;
 
-### Inspect networks / volumes
-```sh
+# Switch to the WordPress database
+USE wordpress_db;
+
+# List all tables inside the WordPress database
+SHOW TABLES;
+
+# Show privileges assigned to the database user
+SHOW GRANTS FOR '<db_user>'@'%';
+
+# Run a one-liner to list databases without entering the shell
+docker exec mariadb mysql -u root -p -e "SHOW DATABASES;"
+
+# Check if MariaDB is listening on port 3306
+ss -tulnp | grep 3306
+
+# Inspect networks / volumes
 docker network ls
 docker volume ls
 docker volume inspect <volume>
@@ -103,29 +89,47 @@ docker volume inspect <volume>
 
 ## 6. Data persistence model
 ### Where data lives (host)
-- MariaDB data: `/home/<login>/data/mariadb`
-- WordPress files: `/home/<login>/data/wordpress`
+- MariaDB data: `/home/$USER/data/mariadb`
+- WordPress files: `/home/$USER/data/wordpress`
 
 ### What is persisted vs ephemeral
 - Persisted:
-  - <db tables/users>
-  - <wp-content/uploads/plugins/themes>
+  - MariaDB databases/users
+  - WordPress uploads/plugins/themes
 - Ephemeral:
-  - <container filesystem outside volumes>
-  - <generated configs if not persisted>
+  - Container filesystem outside mounted volumes
+  - Temporary/generated runtime files
 
 ### Reset strategy
 - Soft reset:
-  - <restart containers>
+```sh
+make down
+make up
+```
 - Hard reset:
-  - <down -v + delete /home/<login>/data/*>
+```sh
+make fclean
+sudo rm -rf /home/$USER/data/*
+```
 
 ## 7. Debugging checklist
 - NGINX TLS:
-  - <openssl s_client / curl -vk>
+```sh
+curl -vk https://jpelline.42.fr
+openssl s_client -connect jpelline.42.fr:443
+```
 - WordPress/php-fpm:
-  - <php-fpm logs / socket/port>
+```sh
+docker compose logs wordpress
+ss -tulnp | grep 9000
+```
 - MariaDB:
-  - <healthcheck / logs / connection test>
+```sh
+docker compose logs mariadb
+docker compose exec mariadb mariadb -u root -p
+```
 - Permissions:
-  - <ownership of /home/<login>/data and /var/www/html>
+```sh
+ls -lah /home/$USER/data
+ls -lah /var/www/html
+```
