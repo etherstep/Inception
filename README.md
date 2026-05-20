@@ -59,12 +59,12 @@ Add a local DNS override to `/etc/hosts`:
 ```sh
 git clone https://github.com/etherstep/inception.git
 cd inception
-make
+make         # build
 ```
 
 ### Usage
 ```sh
-make up      # build + run services
+make up      # run services
 make down    # stop services
 make clean   # remove containers and images
 make fclean  # wipe all data
