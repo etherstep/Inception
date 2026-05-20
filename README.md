@@ -10,29 +10,29 @@ A Docker-based infrastructure project deploying a secure WordPress stack.
 - Build a small, secure, reproducible infrastructure using Docker.
 
 ### Overview
-- **NGINX** — TLS termination + reverse proxy
-- **WordPress** — CMS application
-- **PHP-FPM** — PHP runtime for WordPress
-- **MariaDB** — database backend for WordPress data
+- **NGINX**: TLS termination + reverse proxy
+- **WordPress**: CMS application
+- **PHP-FPM**: PHP runtime for WordPress
+- **MariaDB**: database backend for WordPress data
 
 ## Architecture
 
 ### Virtual Machines vs Docker
-- **VMs** run a full OS per instance → heavier and slower.  
-- **Docker** shares the host kernel → lightweight and fast.  
+- **VMs**: run a full OS per instance → heavier and slower.  
+- **Docker**: shares the host kernel → lightweight and fast.  
 - One service per container improves modularity and reproducibility.
 
 ### Secrets vs Environment Variables
-- **Secrets** — sensitive data (passwords, usernames, keys).  
-- **Environment Variables** — runtime configuration values.
+- **Secrets**: sensitive data (passwords, usernames, keys).  
+- **Environment Variables**: runtime configuration values.
 
 ### Docker Network vs Host Network
-- **Bridge (default)** — isolated network, requires port mapping, recommended.  
-- **Host** — shares host network, no isolation, no port mapping.
+- **Bridge (default)**: isolated network, requires port mapping, recommended.  
+- **Host**: shares host network, no isolation, no port mapping.
 
 ### Docker Volumes vs Bind Mounts
-- **Volumes** — managed by Docker, persistent, portable, production-safe.  
-- **Bind Mounts** — direct host mapping, useful for development.
+- **Volumes**: managed by Docker, persistent, portable, production-safe.  
+- **Bind Mounts**: direct host mapping, useful for development.
 
 ## Instructions
 
