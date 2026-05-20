@@ -41,13 +41,13 @@ Make sure the following tools are installed:
 - Docker Compose
 - Make
 
-## Setup
+### Setup
 
 1. Fill in the required values described in `USER_DOC.md` for:
    - `/secrets`
    - `.env`
 
-## Hosts / DNS
+### Hosts / DNS
 
 Add a local DNS override to `/etc/hosts`:
 
