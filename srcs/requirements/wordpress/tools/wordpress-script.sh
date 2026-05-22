@@ -94,7 +94,7 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 
     echo "==> Installing WordPress..."
     wp_as_www_data "wp core install --path='$WP_PATH' \
-        --url='${DOMAIN_NAME}' \
+        --url='https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' \
         --title='${WORDPRESS_TITLE}' \
         --admin_user='${WP_ADMIN}' \
         --admin_password='${WP_ADMIN_PASSWORD}' \
@@ -103,6 +103,10 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 else
     echo "==> wp-config.php already exists; assuming WordPress is configured."
 fi
+
+# Always force correct siteurl/home for this environment
+wp_as_www_data "wp option update siteurl 'https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' --path='$WP_PATH'"
+wp_as_www_data "wp option update home 'https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' --path='$WP_PATH'"
 
 # Ensure the required non-admin user exists
 echo "==> Ensuring extra user exists..."
