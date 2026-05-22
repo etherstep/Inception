@@ -108,6 +108,32 @@ fi
 wp_as_www_data "wp option update siteurl 'https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' --path='$WP_PATH'"
 wp_as_www_data "wp option update home 'https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' --path='$WP_PATH'"
 
+
+# Insert reverse proxy and port handling code if not present
+FIXLINE="HTTP_X_FORWARDED_PORT"
+if ! grep -q "$FIXLINE" "$WP_PATH/wp-config.php"; then
+  # Insert above the "That's all, stop editing!" comment
+  sed -i "/^\/\* That's all, stop editing! Happy publishing. \*\//i\\
+if (\n\
+    isset(\$_SERVER['HTTP_X_FORWARDED_PROTO']) &&\n\
+    \$_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https'\n\
+) {\n\
+    \$_SERVER['HTTPS'] = 'on';\n\
+}\n\
+if (\n\
+    isset(\$_SERVER['HTTP_X_FORWARDED_PORT']) &&\n\
+    \$_SERVER['HTTP_X_FORWARDED_PORT'] !== '443'\n\
+) {\n\
+    \$_SERVER['SERVER_PORT'] = \$_SERVER['HTTP_X_FORWARDED_PORT'];\n\
+}\n" "$WP_PATH/wp-config.php"
+  echo "Patched wp-config.php for proxy port handling!"
+fi
+
+# Idempotently insert the fixup code if not present
+if ! grep -q 'HTTP_X_FORWARDED_PORT' "$WP_PATH/wp-config.php"; then
+    sed -i "/^\/\* That's all, stop editing! Happy publishing. \*\//i $WP_PROXY_CODE" "$WP_PATH/wp-config.php"
+fi
+
 # Ensure the required non-admin user exists
 echo "==> Ensuring extra user exists..."
 if wp_as_www_data "wp user get '${WP_USER}' --path='${WP_PATH}' >/dev/null 2>&1"; then
