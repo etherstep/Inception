@@ -25,7 +25,7 @@ clean:
 fclean: clean
 	@sudo rm -rf /home/$(USER)/data
 
-re: fclean all
+re: down fclean all
 
 KNOWN_TARGETS := all up down stop start clean fclean re status logs
 
