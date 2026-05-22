@@ -19,7 +19,7 @@ http {
         server_name ${DOMAIN_NAME};
 
         # Permanent redirect to HTTPS while preserving host + requested URI.
-        return 301 https://$host$request_uri;
+        return 301 https://$host:${NGINX_HTTPS_PORT}$request_uri;
     }
 
     server {
