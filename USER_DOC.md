@@ -53,7 +53,9 @@ make fclean  # wipe all data
 - Required variables:
   - `DOMAIN_NAME=jpelline.42.fr`
   - `NGINX_HTTP_PORT=80`
+  - `NGINX_HTTP_PORT_HOST=80`
   - `NGINX_HTTPS_PORT=443`
+  - `NGINX_HTTPS_PORT_HOST=443`
   - `PHP_FPM_PORT=9000`
   - `MARIADB_PORT=3306`
   - `MARIADB_BIND_ADDRESS=0.0.0.0`
