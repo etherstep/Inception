@@ -6,7 +6,9 @@ set -eu
 # Required runtime settings come from .env and are used for cert generation + config rendering.
 : "${DOMAIN_NAME:?missing DOMAIN_NAME}"
 : "${NGINX_HTTP_PORT:?missing NGINX_HTTP_PORT}"
+: "${NGINX_HTTP_PORT_HOST:?missing NGINX_HTTP_PORT_HOST}"
 : "${NGINX_HTTPS_PORT:?missing NGINX_HTTPS_PORT}"
+: "${NGINX_HTTPS_PORT_HOST:?missing NGINX_HTTPS_PORT_HOST}"
 : "${PHP_FPM_PORT:?missing PHP_FPM_PORT}"
 
 # Ensure SSL directory exists (useful when the container starts from a clean filesystem).
@@ -23,7 +25,7 @@ fi
 
 # Render nginx.conf from a template while restricting substitutions 
 # to avoid touching nginx runtime vars like $host/$uri.
-envsubst '${DOMAIN_NAME} ${NGINX_HTTP_PORT} ${NGINX_HTTPS_PORT} ${PHP_FPM_PORT}' \
+envsubst '${DOMAIN_NAME} ${NGINX_HTTP_PORT} ${NGINX_HTTP_PORT_HOST} ${NGINX_HTTPS_PORT} ${NGINX_HTTPS_PORT_HOST} ${PHP_FPM_PORT}' \
   < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
 
 # Start the main container process (nginx) as PID 1.
