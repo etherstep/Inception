@@ -78,6 +78,11 @@ wp_as_www_data() {
   su -s /bin/sh -c "$*" www-data
 }
 
+SITEURL="https://${DOMAIN_NAME}"
+if [ -n "${NGINX_HTTPS_PORT_HOST}" ] && [ "${NGINX_HTTPS_PORT_HOST}" != "443" ]; then
+    SITEURL="https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}"
+fi
+
 # First-run bootstrap: download core, 
 # write wp-config, and install WordPress.
 if [ ! -f "$WP_PATH/wp-config.php" ]; then
@@ -94,20 +99,20 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 
     echo "==> Installing WordPress..."
     wp_as_www_data "wp core install --path='$WP_PATH' \
-        --url='https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' \
+        --url='${SITEURL}' \
         --title='${WORDPRESS_TITLE}' \
         --admin_user='${WP_ADMIN}' \
         --admin_password='${WP_ADMIN_PASSWORD}' \
         --admin_email='${WP_ADMIN_EMAIL}' \
         --skip-email"
+
 else
     echo "==> wp-config.php already exists; assuming WordPress is configured."
 fi
 
 # Always force correct siteurl/home for this environment
-wp_as_www_data "wp option update siteurl 'https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' --path='$WP_PATH'"
-wp_as_www_data "wp option update home 'https://${DOMAIN_NAME}:${NGINX_HTTPS_PORT_HOST}' --path='$WP_PATH'"
-
+wp_as_www_data "wp option update siteurl '${SITEURL}' --path='$WP_PATH'"
+wp_as_www_data "wp option update home '${SITEURL}' --path='$WP_PATH'"
 
 # Insert reverse proxy and port handling code if not present
 FIXLINE="HTTP_X_FORWARDED_PORT"
