@@ -52,7 +52,7 @@ Make sure the following tools are installed:
 Add a local DNS override to `/etc/hosts`:
 
 ```sh
-127.0.0.1 jpelline.42.fr
+127.0.0.1 ${DOMAIN_NAME}
 ```
 
 ### Build
