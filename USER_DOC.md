@@ -31,12 +31,12 @@ make fclean  # wipe all data
 
 ## 3. Access
 ### Website
-- URL: `https://jpelline.42.fr`
+- URL: `https://${DOMAIN_NAME}`
 - Notes:
   - Self-signed certificate warning is expected (ignore in browser)
 
 ### WordPress administration panel
-- URL: `https://jpelline.42.fr/wp-admin`
+- URL: `https://${DOMAIN_NAME}/wp-admin`
 - Login:
   - Username: from /secrets/wp_admin.txt
   - Password: from /secrets/wp_admin_password.txt
@@ -51,7 +51,7 @@ make fclean  # wipe all data
 
 #### `.env`
 - Required variables:
-  - `DOMAIN_NAME=jpelline.42.fr`
+  - `DOMAIN_NAME=`
   - `NGINX_HTTP_PORT=80`
   - `NGINX_HTTP_PORT_HOST=80`
   - `NGINX_HTTPS_PORT=443`
@@ -95,7 +95,7 @@ make logs [service...]
 
 ### Basic functional checks
 - HTTPS:
-  - ```sh curl -k https://jpelline.42.fr```
+  - ```sh curl -k https://${DOMAIN_NAME}```
 - WordPress:
   - Visit /wp-admin and verify login works
 - Database:
