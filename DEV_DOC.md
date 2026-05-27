@@ -8,7 +8,7 @@
 ## 2. Configuration from scratch
 ### .env
 - Create/edit:
-  - `DOMAIN_NAME=jpelline.42.fr`
+  - `DOMAIN_NAME=`
   - `NGINX_HTTP_PORT=80`
   - `NGINX_HTTP_PORT_HOST=80`
   - `NGINX_HTTPS_PORT=443`
@@ -42,11 +42,11 @@ mkdir -p /home/$USER/data/wordpress
 
 ### Domain / hosts entry
 - Add mapping:
-  - `127.0.0.1 jpelline.42.fr`
+  - `127.0.0.1 ${DOMAIN_NAME}`
 - Verify:
 ```sh
 ping jpelline.42.fr
-curl -k https://jpelline.42.fr
+curl -k https://${DOMAIN_NAME}
 ```
 
 ## 4. Build and launch
@@ -117,8 +117,8 @@ sudo rm -rf /home/$USER/data/*
 ## 7. Debugging checklist
 - NGINX TLS:
 ```sh
-curl -vk https://jpelline.42.fr
-openssl s_client -connect jpelline.42.fr:443
+curl -vk https://${DOMAIN_NAME}
+openssl s_client -connect ${DOMAIN_NAME}:443
 ```
 - WordPress/php-fpm:
 ```sh
