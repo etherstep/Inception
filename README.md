@@ -1,5 +1,5 @@
 > [!NOTE]
-> *This project has been created as part of the 42 curriculum
+> This project has been created as part of the 42 curriculum
 
 # Inception
 A Docker-based infrastructure project deploying a secure WordPress stack.
