@@ -71,14 +71,3 @@ make fclean  # wipe all data
 make status  [service...]
 make logs    [service...]
 ```
-
-## Resources
-
-### References
-- https://docs.docker.com/guides/
-- https://mariadb.com/docs/
-- https://nginx.org/en/docs/
-- https://www.youtube.com/watch?v=DQdB7wFEygo
-
-### AI Usage
-- AI was mostly used to assist in understanding concepts, writing complex scripts, and debugging.
